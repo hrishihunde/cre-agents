@@ -1,26 +1,144 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer base {
+  :root {
+    --bg: #0a0a0a;
+    --bg1: #111111;
+    --bg2: #191919;
+    --bg3: #222222;
+    --bg4: #2a2a2a;
+    --b0: #2e2e2e;
+    --b1: #3a3a3a;
+    --b2: #555555;
+    --t0: #ffffff;
+    --t1: #cccccc;
+    --t2: #888888;
+    --t3: #555555;
+    --t4: #333333;
+
+    --sw: 218px;
+    --cw: 298px;
+    --th: 38px;
+    --tgh: 46px;
+    --subh: 52px;
+  }
+
+  html,
+  body {
+    @apply h-full overflow-hidden bg-[var(--bg)] text-[var(--t1)] font-mono text-[12px];
+  }
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-bg1: var(--bg1);
+  --color-bg2: var(--bg2);
+  --color-bg3: var(--bg3);
+  --color-bg4: var(--bg4);
+
+  --color-b0: var(--b0);
+  --color-b1: var(--b1);
+  --color-b2: var(--b2);
+
+  --color-t0: var(--t0);
+  --color-t1: var(--t1);
+  --color-t2: var(--t2);
+  --color-t3: var(--t3);
+  --color-t4: var(--t4);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .app-grid {
+    display: grid;
+    grid-template-rows: var(--th) 1fr;
+    grid-template-columns: var(--sw) 1fr var(--cw);
+    height: 100vh;
+  }
+
+  .sb-icon {
+    @apply w-[13px] h-[13px] rounded-full border-[1.5px] border-b1 shrink-0 flex items-center justify-center text-[7px] transition-all duration-250;
+  }
+
+  .toggle-btn {
+    @apply h-[26px] px-[9px] rounded-[3px] border border-b0 bg-bg text-t4 font-mono text-[10px] cursor-pointer transition-all duration-150 whitespace-nowrap tracking-[0.1px] flex items-center gap-[3px];
+  }
+  .toggle-btn:hover {
+    @apply border-b2 text-t2;
+  }
+  .toggle-btn.done {
+    @apply text-t3 border-b0;
+  }
+  .toggle-btn.done .tl {
+    @apply line-through opacity-50;
+  }
+  .toggle-btn.cur {
+    @apply border-t0 text-t0 bg-bg2;
+  }
+
+  .node-box {
+    @apply bg-bg2 border border-b1 rounded-[8px] py-[10px] px-[14px] min-w-[108px] text-center transition-all duration-300 relative;
+  }
+  .node-box.cur {
+    @apply border-t0 bg-bg3;
+    box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .node-box.done {
+    @apply border-b2;
+  }
+  .node-box.dim {
+    @apply opacity-20;
+  }
+
+  .info-btn {
+    @apply absolute top-[4px] right-[4px] w-[14px] h-[14px] rounded-full border border-b1 bg-bg3 text-t3 text-[8px] italic font-semibold font-sans cursor-pointer flex items-center justify-center transition-all duration-100 z-20 leading-none;
+  }
+  .info-btn:hover {
+    @apply border-t0 text-t0;
+  }
+
+  .code-line {
+    @apply flex px-[11px] gap-[9px] text-[10px] leading-[1.8] font-mono hover:bg-white/[0.015];
+  }
+  .code-line.hl {
+    @apply bg-white/[0.055] border-l-[1.5px] border-l-t0;
+  }
+  .code-line.hd {
+    @apply bg-white/[0.02] border-l-[1.5px] border-l-b2;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@keyframes dash {
+  to {
+    stroke-dashoffset: -60;
+  }
+}
+
+@keyframes fi {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fi {
+  animation: fi 0.2s ease both;
+}
+
+::-webkit-scrollbar {
+  width: 3px;
+  height: 3px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--b0);
+  border-radius: 2px;
 }
