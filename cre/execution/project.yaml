@@ -1,0 +1,12 @@
+# ==========================================================================
+# CRE PROJECT SETTINGS FILE
+# ==========================================================================
+staging-settings:
+  rpcs:
+    - chain-name: ethereum-testnet-sepolia
+      url: https://ethereum-sepolia-rpc.publicnode.com
+
+  experimental-chains:
+    - chain-selector: 11155111
+      rpc-url: https://ethereum-sepolia-rpc.publicnode.com
+      forwarder: "0x0000000000000000000000000000000000000000" # Required for simulating chain writes

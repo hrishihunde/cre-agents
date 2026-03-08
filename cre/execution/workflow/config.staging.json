@@ -1,0 +1,5 @@
+{
+  "facilitator_verify_url": "https://api.cdp.coinbase.com/platform/v2/x402/verify",
+  "chain_selector": 11155111,
+  "contract_address": "0x0000000000000000000000000000000000000000"
+}
