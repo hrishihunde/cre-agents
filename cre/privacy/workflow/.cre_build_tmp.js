@@ -13842,12 +13842,10 @@ var onHttpTrigger = (runtime2, httpPayload) => {
   try {
     requestData = typeof httpPayload.input === "object" ? httpPayload.input : decodeJson(httpPayload.input);
   } catch (err) {
-    runtime2.log(`[Parse Error] Failed to decode input: ${err.message}`);
     return { status: "error", message: "Invalid payload format" };
   }
   const parsed = x402RequestSchema.safeParse(requestData);
   if (!parsed.success) {
-    runtime2.log(`[Validation Error] ${JSON.stringify(parsed.error.format())}`);
     return { status: "error", message: "Invalid x402 request parameters" };
   }
   const req = parsed.data;
@@ -13863,21 +13861,22 @@ var onHttpTrigger = (runtime2, httpPayload) => {
     }
   }).result();
   if (verifyRes.statusCode !== 200) {
-    runtime2.log(`[x402] Verification failed: ${verifyRes.statusCode}`);
     return { status: "error", message: "x402 Proof Verification Failed", statusCode: verifyRes.statusCode };
   }
   const secrets = req.secret_id ? [{ key: req.secret_id, version: 1 }] : [];
-  const authHeader = req.secret_id ? { Authorization: { values: [`Bearer {{.${req.secret_id}}}`] } } : {};
+  const headers = {
+    "Content-Type": { values: ["application/json"] },
+    "X-X402-Payment-Proof": { values: [req.payment_proof] }
+  };
+  if (req.secret_id) {
+    headers["Authorization"] = { values: [`Bearer {{.${req.secret_id}}}`] };
+  }
   const serviceRes = confidentialClient.sendRequest(runtime2, {
     vaultDonSecrets: secrets,
     request: {
       url: req.resource_url,
       method: req.method,
-      multiHeaders: {
-        "Content-Type": { values: ["application/json"] },
-        "X-X402-Payment-Proof": { values: [req.payment_proof] },
-        ...authHeader
-      },
+      multiHeaders: headers,
       bodyString: req.method !== "GET" ? JSON.stringify(req.parameters) : "",
       encryptOutput: true
     }
@@ -13889,7 +13888,7 @@ var onHttpTrigger = (runtime2, httpPayload) => {
   try {
     responseBody = decodeJson(serviceRes.body);
   } catch {
-    responseBody = serviceRes.body;
+    responseBody = new TextDecoder().decode(serviceRes.body);
   }
   return {
     status: "success",

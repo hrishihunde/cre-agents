@@ -108,8 +108,7 @@ export class X402Agent {
         abi: X402AgentABI,
         eventName: 'ServiceRequested' as const,
       })
-// @ts-ignore
-      topics = encoded.map((t) => ({ values: [hexToBase64(t as string)] }))
+      topics = encoded.map((t) => ({ values: [hexToBase64(t)] }))
     } else if (filters.length === 1) {
       const f = filters[0]
       const args = {
@@ -120,8 +119,7 @@ export class X402Agent {
         eventName: 'ServiceRequested' as const,
         args,
       })
-// @ts-ignore
-      topics = encoded.map((t) => ({ values: [hexToBase64(t as string)] }))
+      topics = encoded.map((t) => ({ values: [hexToBase64(t)] }))
     } else {
       const allEncoded = filters.map((f) => {
         const args = {
